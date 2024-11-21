@@ -7,9 +7,9 @@ from torchvision import transforms as T
 from torchvision.transforms import functional as TF
 from torchvision.transforms.functional import normalize
 
-from basicsr.utils import img2tensor, tensor2img
-from facexlib.utils.face_restoration_helper import FaceRestoreHelper
-from facexlib.utils import load_file_from_url
+from fr_basicsr.utils import img2tensor, tensor2img
+from fr_facelib.utils.face_restoration_helper import FaceRestoreHelper
+from fr_facelib.utils import load_file_from_url
 
 import comfy.model_management as model_management
 import comfy.utils
