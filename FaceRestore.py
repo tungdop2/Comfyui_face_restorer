@@ -75,18 +75,14 @@ class FaceRestorerLoader:
 
         device = model_management.get_torch_device()
 
-        if not os.path.exists(os.path.join(current_paths[0], arch_model_path[arch].split("/")[-1])):
-            model_path = load_file_from_url(
-                arch_model_path[arch],
-                model_dir="facerestorer",
-                progress=True,
-                file_name=None,
-                save_dir=current_paths[0],
-            )
-            logger.info(f"Downloaded {arch} model to {model_path}")
+        model_path = load_file_from_url(
+            arch_model_path[arch],
+            model_dir="facerestorer",
+            progress=True,
+            file_name=None,
+            save_dir=current_paths[0],
+        )
 
-
-        logger.info(f"Loading {arch} model from {model_path}")
         weights = comfy.utils.load_torch_file(
             model_path,
             safe_load=True,
