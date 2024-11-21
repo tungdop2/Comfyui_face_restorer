@@ -5,9 +5,11 @@ import cv2
 import torch
 from torchvision import transforms as T
 from torchvision.transforms import functional as TF
+from torchvision.transforms.functional import normalize
+
 from basicsr.utils import img2tensor, tensor2img
 from facexlib.utils.face_restoration_helper import FaceRestoreHelper
-from torchvision.transforms.functional import normalize
+from facexlib.utils import load_file_from_url
 
 import comfy.model_management as model_management
 import comfy.utils
@@ -25,9 +27,9 @@ logger.setLevel(logging.INFO)
 
 
 arch_model_path = {
-    "RestoreFormer": "RestoreFormer.ckpt",
-    "RestoreFormer++": "RestoreFormer++.ckpt",
-    "GFPGANv1.4": "GFPGANv1.4.pth",
+    "RestoreFormer": "https://huggingface.co/tungdop2/FaceRestorer/resolve/main/RestoreFormer.ckpt",
+    "RestoreFormer++": "https://huggingface.co/tungdop2/FaceRestorer/resolve/main/RestoreFormer++.ckpt",
+    # "GFPGANv1.4": "https://huggingface.co/tungdop2/FaceRestorer/resolve/main/GFPGANv1.4.pth",
 }
 
 
@@ -51,7 +53,7 @@ class FaceRestorerLoader:
 
     @classmethod
     def INPUT_TYPES(cls):
-        return {"required": {"arch": (["RestoreFormer", "RestoreFormer++"],)}}
+        return {"required": {"arch": (list(arch_model_path.keys()), {"default": "RestoreFormer++"})}}
 
     RETURN_TYPES = ("FACE_RESTORE_MODEL",)
 
@@ -73,9 +75,20 @@ class FaceRestorerLoader:
 
         device = model_management.get_torch_device()
 
-        logger.info(f"Loading {arch} model from {current_paths[0]}")
+        if not os.path.exists(os.path.join(current_paths[0], arch_model_path[arch].split("/")[-1])):
+            model_path = load_file_from_url(
+                arch_model_path[arch],
+                model_dir="facerestorer",
+                progress=True,
+                file_name=None,
+                save_dir=current_paths[0],
+            )
+            logger.info(f"Downloaded {arch} model to {model_path}")
+
+
+        logger.info(f"Loading {arch} model from {model_path}")
         weights = comfy.utils.load_torch_file(
-            os.path.join(current_paths[0], arch_model_path[arch]),
+            model_path,
             safe_load=True,
             device=device,
         )
