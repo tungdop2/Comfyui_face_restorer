@@ -1,0 +1,15 @@
+[project]
+name = "comfyui_face_restorer"
+description = "The face restore node for ComfyUI, based on RestoreFormer"
+version = "1.0.0"
+license = {file = "LICENSE"}
+dependencies = ["facexlib==0.2.5", "ffmpeg-python==0.2.0", "omegaconf", "pytorch-lightning==1.0.8", "basicsr==1.4.2", "test-tube==0.7.5", "# opencv-python==4.5.2.54", "# realesrgan==0.3.0"]
+
+[project.urls]
+Repository = "https://github.com/tungdop2/Comfyui_face_restorer"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "Comfyui_face_restorer"
+Icon = ""
